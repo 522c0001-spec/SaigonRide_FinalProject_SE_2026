@@ -1,0 +1,49 @@
+﻿@model IEnumerable<SaigonRide_FinalProject.Models.Vehicle>
+
+@{
+    ViewBag.Title = "Vehicle Fleet Management";
+}
+
+<div style="margin-bottom: 20px;">
+    <h2 style="color: #009A5A; font-weight: bold;">Vehicle List</h2>
+    @Html.ActionLink("Add New Vehicle", "Create", null, new { @class = "btn btn-success", style="background-color: #009A5A; border: none;" })
+</div>
+
+<div class="panel panel-default" style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: none;">
+    <div class="panel-body" style="padding: 0;">
+        <table class="table table-hover" style="margin-bottom: 0;">
+            <thead style="background-color: #f8f9fa; border-bottom: 2px solid #eaeaea;">
+                <tr>
+                    <th style="padding: 15px; color: #6c757d; font-size: 12px; text-transform: uppercase;">Vehicle ID</th>
+                    <th style="padding: 15px; color: #6c757d; font-size: 12px; text-transform: uppercase;">Category</th>
+                    <th style="padding: 15px; color: #6c757d; font-size: 12px; text-transform: uppercase;">Status</th>
+                    <th style="padding: 15px; color: #6c757d; font-size: 12px; text-transform: uppercase;">Current Station</th>
+                    <th style="padding: 15px; text-align: right;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model) {
+                    // C# Logic to color-code the status badges
+                    string badgeClass = "label-default";
+                    if (item.Status == "Available") { badgeClass = "label-success"; }
+                    else if (item.Status == "In-Transit") { badgeClass = "label-info"; }
+                    else if (item.Status == "Maintenance") { badgeClass = "label-danger"; }
+
+                <tr>
+                    <td style="padding: 15px; vertical-align: middle;"><strong>v-00@(item.VehicleID)</strong></td>
+                    <td style="padding: 15px; vertical-align: middle;">@Html.DisplayFor(modelItem => item.Category)</td>
+                    <td style="padding: 15px; vertical-align: middle;">
+                        <span class="label @badgeClass" style="padding: 5px 10px; border-radius: 12px; font-size: 11px;">@Html.DisplayFor(modelItem => item.Status)</span>
+                    </td>
+                    <td style="padding: 15px; vertical-align: middle;">@Html.DisplayFor(modelItem => item.Station.LocationName)</td>
+                    <td style="padding: 15px; vertical-align: middle; text-align: right;">
+                        @Html.ActionLink("Edit", "Edit", new { id=item.VehicleID }, new { @class="text-primary", style="margin-right: 10px;" })
+                        @Html.ActionLink("Details", "Details", new { id=item.VehicleID }, new { @class="text-muted", style="margin-right: 10px;" })
+                        @Html.ActionLink("Delete", "Delete", new { id=item.VehicleID }, new { @class="text-danger" })
+                    </td>
+                </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

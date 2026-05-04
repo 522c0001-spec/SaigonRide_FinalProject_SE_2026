@@ -1,0 +1,94 @@
+﻿@model IEnumerable<SaigonRide_FinalProject.Models.RentalTransaction>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.TransactionID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.StartTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.EndTime)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BaseFare)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AppliedDiscount)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TotalPaid)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PaymentMethod)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Station.LocationName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Station1.LocationName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.User.FullName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Vehicle.Category)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.TransactionID)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.StartTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.EndTime)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.BaseFare)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.AppliedDiscount)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TotalPaid)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PaymentMethod)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Station.LocationName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Station1.LocationName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.User.FullName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Vehicle.Category)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.TransactionID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.TransactionID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.TransactionID }) |
+            @Html.ActionLink("Checkout", "CheckoutForm", new { id=item.TransactionID }, new { style="color: #009A5A; font-weight: bold;" })
+        </td>
+    </tr>
+}
+
+</table>

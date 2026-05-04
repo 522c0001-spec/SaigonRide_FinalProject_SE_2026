@@ -1,0 +1,61 @@
+﻿@model SaigonRide_FinalProject.Models.RentalTransaction
+
+@{
+    ViewBag.Title = "Checkout";
+}
+
+<div class="container" style="max-width: 600px; margin-top: 40px;">
+    <h2 style="color: #009A5A; font-weight: bold;">Rent a Vehicle</h2>
+    <p class="text-muted"><i class="glyphicon glyphicon-map-marker"></i> Active Trip Check-Out</p>
+
+    <div class="panel panel-default" style="border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+        <div class="panel-body" style="padding: 30px;">
+            <h4 style="font-weight: bold; margin-bottom: 20px;">Confirm Rental Details</h4>
+
+            <!-- Dũng's logic needs this form to POST back to the Checkout method -->
+            <form action="/RentalTransactions/Checkout" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="transactionId" value="@Model.TransactionID" />
+
+                <div class="form-group">
+                    <label class="text-muted">Selected Vehicle</label>
+                    <input type="text" class="form-control" value="v-00@(Model.VehicleID) - @Model.Vehicle.Category" readonly />
+                </div>
+
+                <div class="form-group">
+                    <label class="text-muted">Planned Return Station</label>
+                    <select name="endStationId" class="form-control" required>
+                        <option value="">-- Select a Drop-Off Location --</option>
+                        @foreach (var station in ViewBag.Stations)
+                        {
+                        <option value="@station.StationID">@station.LocationName - Capacity: @station.CurrentInventory/@station.MaxCapacity</option>
+                        }
+                    </select>
+                </div>
+
+                <hr />
+                <h4 style="font-weight: bold; margin-bottom: 20px;">Select Payment Method</h4>
+                <div class="form-group">
+                    <select name="paymentMethod" class="form-control input-lg" required>
+                        <option value="">-- Choose Payment --</option>
+                        <optgroup label="Local Commuters">
+                            <option value="MoMo">MoMo</option>
+                            <option value="VNPay">VNPay</option>
+                            <option value="Cash">Cash</option>
+                        </optgroup>
+                        <optgroup label="Foreign Tourists">
+                            <option value="ApplePay">Apple Pay (Passport Verified)</option>
+                            <option value="PayPal">PayPal (Passport Verified)</option>
+                        </optgroup>
+                    </select>
+                </div>
+
+                <div class="alert alert-info" style="border-radius: 8px;">
+                    <i class="glyphicon glyphicon-info-sign"></i> System will calculate time, base fares (500₫/1500₫), and check for the 15% low-inventory discount automatically upon submission.
+                </div>
+
+                <button type="submit" class="btn btn-success btn-lg btn-block" style="background-color: #009A5A; border: none; border-radius: 8px;">End Ride & Process Payment</button>
+            </form>
+        </div>
+    </div>
+</div>

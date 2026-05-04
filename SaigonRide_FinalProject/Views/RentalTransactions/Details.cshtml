@@ -1,0 +1,98 @@
+﻿@model SaigonRide_FinalProject.Models.RentalTransaction
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>RentalTransaction</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.StartTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.StartTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EndTime)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EndTime)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BaseFare)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BaseFare)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.AppliedDiscount)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AppliedDiscount)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TotalPaid)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TotalPaid)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PaymentMethod)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PaymentMethod)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Station.LocationName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Station.LocationName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Station1.LocationName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Station1.LocationName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.User.FullName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.User.FullName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Vehicle.Category)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Vehicle.Category)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.TransactionID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

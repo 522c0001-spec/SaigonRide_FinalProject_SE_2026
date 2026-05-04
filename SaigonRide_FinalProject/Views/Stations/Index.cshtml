@@ -1,0 +1,43 @@
+﻿@model IEnumerable<SaigonRide_FinalProject.Models.Station>
+
+@{
+    ViewBag.Title = "Station Network";
+}
+
+<div style="margin-bottom: 20px;">
+    <h2 style="color: #009A5A; font-weight: bold;">Station Network</h2>
+    <p class="text-muted">Find available vehicles at stations across Ho Chi Minh City</p>
+    @Html.ActionLink("Create New Station", "Create", null, new { @class = "btn btn-success", style="background-color: #009A5A; border: none;" })
+</div>
+
+<div class="row">
+    @foreach (var item in Model) {
+        // Calculate the capacity percentage for the progress bar
+        double utilPercentage = item.MaxCapacity > 0 ? ((double)item.CurrentInventory / item.MaxCapacity) * 100 : 0;
+        string barColor = utilPercentage < 20 ? "progress-bar-danger" : "progress-bar-success";
+
+    <div class="col-md-4" style="margin-bottom: 20px;">
+        <div class="panel panel-default" style="border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: none;">
+            <div class="panel-body" style="padding: 20px;">
+                <h4 style="font-weight: bold; margin-top: 0;">@Html.DisplayFor(modelItem => item.LocationName)</h4>
+                <p class="text-muted" style="font-size: 12px;"><i class="glyphicon glyphicon-map-marker"></i> SaigonRide Hub</p>
+
+                <div style="display: flex; justify-content: space-between; margin-top: 15px;">
+                    <span class="text-muted small">Capacity</span>
+                    <span class="small" style="font-weight: bold;">@item.CurrentInventory / @item.MaxCapacity</span>
+                </div>
+
+                <div class="progress" style="height: 8px; margin-top: 5px; margin-bottom: 15px; border-radius: 4px;">
+                    <div class="progress-bar @barColor" role="progressbar" style="width: @utilPercentage%;"></div>
+                </div>
+
+                <div class="text-center" style="margin-top: 20px;">
+                    @Html.ActionLink("Edit", "Edit", new { id=item.StationID }, new { @class="btn btn-sm btn-default" })
+                    @Html.ActionLink("Details", "Details", new { id=item.StationID }, new { @class="btn btn-sm btn-info", style="background-color: #3b82f6; border: none;" })
+                    @Html.ActionLink("Delete", "Delete", new { id=item.StationID }, new { @class="btn btn-sm btn-danger" })
+                </div>
+            </div>
+        </div>
+    </div>
+    }
+</div>

@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36717.8 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SaigonRide_FinalProject", "SaigonRide_FinalProject\SaigonRide_FinalProject.csproj", "{12BB890A-A127-4727-AB65-A1B40E54F332}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{12BB890A-A127-4727-AB65-A1B40E54F332}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12BB890A-A127-4727-AB65-A1B40E54F332}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12BB890A-A127-4727-AB65-A1B40E54F332}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12BB890A-A127-4727-AB65-A1B40E54F332}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {52EBFDC3-801F-47E6-BEE6-A51B6697310D}
+	EndGlobalSection
+EndGlobal

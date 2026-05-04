@@ -1,0 +1,357 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="SaigonRideDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="RentalTransactions">
+          <Key>
+            <PropertyRef Name="TransactionID" />
+          </Key>
+          <Property Name="TransactionID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserID" Type="int" Nullable="false" />
+          <Property Name="VehicleID" Type="int" Nullable="false" />
+          <Property Name="StartStationID" Type="int" Nullable="false" />
+          <Property Name="EndStationID" Type="int" />
+          <Property Name="StartTime" Type="datetime" Nullable="false" />
+          <Property Name="EndTime" Type="datetime" />
+          <Property Name="BaseFare" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="AppliedDiscount" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="TotalPaid" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="PaymentMethod" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Stations">
+          <Key>
+            <PropertyRef Name="StationID" />
+          </Key>
+          <Property Name="StationID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="LocationName" Type="nvarchar" MaxLength="150" Nullable="false" />
+          <Property Name="MaxCapacity" Type="int" Nullable="false" />
+          <Property Name="CurrentInventory" Type="int" />
+        </EntityType>
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FullName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="UserType" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="PassportNumber" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="Vehicles">
+          <Key>
+            <PropertyRef Name="VehicleID" />
+          </Key>
+          <Property Name="VehicleID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Category" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Status" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="CurrentStationID" Type="int" />
+        </EntityType>
+        <Association Name="FK__RentalTra__EndSt__5535A963">
+          <End Role="Stations" Type="Self.Stations" Multiplicity="0..1" />
+          <End Role="RentalTransactions" Type="Self.RentalTransactions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Stations">
+              <PropertyRef Name="StationID" />
+            </Principal>
+            <Dependent Role="RentalTransactions">
+              <PropertyRef Name="EndStationID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__RentalTra__Start__5441852A">
+          <End Role="Stations" Type="Self.Stations" Multiplicity="1" />
+          <End Role="RentalTransactions" Type="Self.RentalTransactions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Stations">
+              <PropertyRef Name="StationID" />
+            </Principal>
+            <Dependent Role="RentalTransactions">
+              <PropertyRef Name="StartStationID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__RentalTra__UserI__52593CB8">
+          <End Role="Users" Type="Self.Users" Multiplicity="1" />
+          <End Role="RentalTransactions" Type="Self.RentalTransactions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="RentalTransactions">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__RentalTra__Vehic__534D60F1">
+          <End Role="Vehicles" Type="Self.Vehicles" Multiplicity="1" />
+          <End Role="RentalTransactions" Type="Self.RentalTransactions" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Vehicles">
+              <PropertyRef Name="VehicleID" />
+            </Principal>
+            <Dependent Role="RentalTransactions">
+              <PropertyRef Name="VehicleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Vehicles__Curren__4F7CD00D">
+          <End Role="Stations" Type="Self.Stations" Multiplicity="0..1" />
+          <End Role="Vehicles" Type="Self.Vehicles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Stations">
+              <PropertyRef Name="StationID" />
+            </Principal>
+            <Dependent Role="Vehicles">
+              <PropertyRef Name="CurrentStationID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="SaigonRideDBModelStoreContainer">
+          <EntitySet Name="RentalTransactions" EntityType="Self.RentalTransactions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Stations" EntityType="Self.Stations" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Vehicles" EntityType="Self.Vehicles" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__RentalTra__EndSt__5535A963" Association="Self.FK__RentalTra__EndSt__5535A963">
+            <End Role="Stations" EntitySet="Stations" />
+            <End Role="RentalTransactions" EntitySet="RentalTransactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK__RentalTra__Start__5441852A" Association="Self.FK__RentalTra__Start__5441852A">
+            <End Role="Stations" EntitySet="Stations" />
+            <End Role="RentalTransactions" EntitySet="RentalTransactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK__RentalTra__UserI__52593CB8" Association="Self.FK__RentalTra__UserI__52593CB8">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="RentalTransactions" EntitySet="RentalTransactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK__RentalTra__Vehic__534D60F1" Association="Self.FK__RentalTra__Vehic__534D60F1">
+            <End Role="Vehicles" EntitySet="Vehicles" />
+            <End Role="RentalTransactions" EntitySet="RentalTransactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Vehicles__Curren__4F7CD00D" Association="Self.FK__Vehicles__Curren__4F7CD00D">
+            <End Role="Stations" EntitySet="Stations" />
+            <End Role="Vehicles" EntitySet="Vehicles" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="SaigonRideDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="RentalTransaction">
+          <Key>
+            <PropertyRef Name="TransactionID" />
+          </Key>
+          <Property Name="TransactionID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserID" Type="Int32" Nullable="false" />
+          <Property Name="VehicleID" Type="Int32" Nullable="false" />
+          <Property Name="StartStationID" Type="Int32" Nullable="false" />
+          <Property Name="EndStationID" Type="Int32" />
+          <Property Name="StartTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EndTime" Type="DateTime" Precision="3" />
+          <Property Name="BaseFare" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="AppliedDiscount" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="TotalPaid" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="PaymentMethod" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Station" Relationship="Self.FK__RentalTra__EndSt__5535A963" FromRole="RentalTransactions" ToRole="Stations" />
+          <NavigationProperty Name="Station1" Relationship="Self.FK__RentalTra__Start__5441852A" FromRole="RentalTransactions" ToRole="Stations" />
+          <NavigationProperty Name="User" Relationship="Self.FK__RentalTra__UserI__52593CB8" FromRole="RentalTransactions" ToRole="Users" />
+          <NavigationProperty Name="Vehicle" Relationship="Self.FK__RentalTra__Vehic__534D60F1" FromRole="RentalTransactions" ToRole="Vehicles" />
+        </EntityType>
+        <EntityType Name="Station">
+          <Key>
+            <PropertyRef Name="StationID" />
+          </Key>
+          <Property Name="StationID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LocationName" Type="String" MaxLength="150" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="MaxCapacity" Type="Int32" Nullable="false" />
+          <Property Name="CurrentInventory" Type="Int32" />
+          <NavigationProperty Name="RentalTransactions" Relationship="Self.FK__RentalTra__EndSt__5535A963" FromRole="Stations" ToRole="RentalTransactions" />
+          <NavigationProperty Name="RentalTransactions1" Relationship="Self.FK__RentalTra__Start__5441852A" FromRole="Stations" ToRole="RentalTransactions" />
+          <NavigationProperty Name="Vehicles" Relationship="Self.FK__Vehicles__Curren__4F7CD00D" FromRole="Stations" ToRole="Vehicles" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="UserID" />
+          </Key>
+          <Property Name="UserID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FullName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="UserType" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="PassportNumber" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="RentalTransactions" Relationship="Self.FK__RentalTra__UserI__52593CB8" FromRole="Users" ToRole="RentalTransactions" />
+        </EntityType>
+        <EntityType Name="Vehicle">
+          <Key>
+            <PropertyRef Name="VehicleID" />
+          </Key>
+          <Property Name="VehicleID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Category" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="CurrentStationID" Type="Int32" />
+          <NavigationProperty Name="RentalTransactions" Relationship="Self.FK__RentalTra__Vehic__534D60F1" FromRole="Vehicles" ToRole="RentalTransactions" />
+          <NavigationProperty Name="Station" Relationship="Self.FK__Vehicles__Curren__4F7CD00D" FromRole="Vehicles" ToRole="Stations" />
+        </EntityType>
+        <Association Name="FK__RentalTra__EndSt__5535A963">
+          <End Role="Stations" Type="Self.Station" Multiplicity="0..1" />
+          <End Role="RentalTransactions" Type="Self.RentalTransaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Stations">
+              <PropertyRef Name="StationID" />
+            </Principal>
+            <Dependent Role="RentalTransactions">
+              <PropertyRef Name="EndStationID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__RentalTra__Start__5441852A">
+          <End Role="Stations" Type="Self.Station" Multiplicity="1" />
+          <End Role="RentalTransactions" Type="Self.RentalTransaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Stations">
+              <PropertyRef Name="StationID" />
+            </Principal>
+            <Dependent Role="RentalTransactions">
+              <PropertyRef Name="StartStationID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__RentalTra__UserI__52593CB8">
+          <End Role="Users" Type="Self.User" Multiplicity="1" />
+          <End Role="RentalTransactions" Type="Self.RentalTransaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Users">
+              <PropertyRef Name="UserID" />
+            </Principal>
+            <Dependent Role="RentalTransactions">
+              <PropertyRef Name="UserID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__RentalTra__Vehic__534D60F1">
+          <End Role="Vehicles" Type="Self.Vehicle" Multiplicity="1" />
+          <End Role="RentalTransactions" Type="Self.RentalTransaction" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Vehicles">
+              <PropertyRef Name="VehicleID" />
+            </Principal>
+            <Dependent Role="RentalTransactions">
+              <PropertyRef Name="VehicleID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Vehicles__Curren__4F7CD00D">
+          <End Role="Stations" Type="Self.Station" Multiplicity="0..1" />
+          <End Role="Vehicles" Type="Self.Vehicle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Stations">
+              <PropertyRef Name="StationID" />
+            </Principal>
+            <Dependent Role="Vehicles">
+              <PropertyRef Name="CurrentStationID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="SaigonRideDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="RentalTransactions" EntityType="Self.RentalTransaction" />
+          <EntitySet Name="Stations" EntityType="Self.Station" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <EntitySet Name="Vehicles" EntityType="Self.Vehicle" />
+          <AssociationSet Name="FK__RentalTra__EndSt__5535A963" Association="Self.FK__RentalTra__EndSt__5535A963">
+            <End Role="Stations" EntitySet="Stations" />
+            <End Role="RentalTransactions" EntitySet="RentalTransactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK__RentalTra__Start__5441852A" Association="Self.FK__RentalTra__Start__5441852A">
+            <End Role="Stations" EntitySet="Stations" />
+            <End Role="RentalTransactions" EntitySet="RentalTransactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK__RentalTra__UserI__52593CB8" Association="Self.FK__RentalTra__UserI__52593CB8">
+            <End Role="Users" EntitySet="Users" />
+            <End Role="RentalTransactions" EntitySet="RentalTransactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK__RentalTra__Vehic__534D60F1" Association="Self.FK__RentalTra__Vehic__534D60F1">
+            <End Role="Vehicles" EntitySet="Vehicles" />
+            <End Role="RentalTransactions" EntitySet="RentalTransactions" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Vehicles__Curren__4F7CD00D" Association="Self.FK__Vehicles__Curren__4F7CD00D">
+            <End Role="Stations" EntitySet="Stations" />
+            <End Role="Vehicles" EntitySet="Vehicles" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="SaigonRideDBModelStoreContainer" CdmEntityContainer="SaigonRideDBEntities">
+          <EntitySetMapping Name="RentalTransactions">
+            <EntityTypeMapping TypeName="SaigonRideDBModel.RentalTransaction">
+              <MappingFragment StoreEntitySet="RentalTransactions">
+                <ScalarProperty Name="TransactionID" ColumnName="TransactionID" />
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="VehicleID" ColumnName="VehicleID" />
+                <ScalarProperty Name="StartStationID" ColumnName="StartStationID" />
+                <ScalarProperty Name="EndStationID" ColumnName="EndStationID" />
+                <ScalarProperty Name="StartTime" ColumnName="StartTime" />
+                <ScalarProperty Name="EndTime" ColumnName="EndTime" />
+                <ScalarProperty Name="BaseFare" ColumnName="BaseFare" />
+                <ScalarProperty Name="AppliedDiscount" ColumnName="AppliedDiscount" />
+                <ScalarProperty Name="TotalPaid" ColumnName="TotalPaid" />
+                <ScalarProperty Name="PaymentMethod" ColumnName="PaymentMethod" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Stations">
+            <EntityTypeMapping TypeName="SaigonRideDBModel.Station">
+              <MappingFragment StoreEntitySet="Stations">
+                <ScalarProperty Name="StationID" ColumnName="StationID" />
+                <ScalarProperty Name="LocationName" ColumnName="LocationName" />
+                <ScalarProperty Name="MaxCapacity" ColumnName="MaxCapacity" />
+                <ScalarProperty Name="CurrentInventory" ColumnName="CurrentInventory" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="SaigonRideDBModel.User">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="UserID" ColumnName="UserID" />
+                <ScalarProperty Name="FullName" ColumnName="FullName" />
+                <ScalarProperty Name="UserType" ColumnName="UserType" />
+                <ScalarProperty Name="PassportNumber" ColumnName="PassportNumber" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Vehicles">
+            <EntityTypeMapping TypeName="SaigonRideDBModel.Vehicle">
+              <MappingFragment StoreEntitySet="Vehicles">
+                <ScalarProperty Name="VehicleID" ColumnName="VehicleID" />
+                <ScalarProperty Name="Category" ColumnName="Category" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="CurrentStationID" ColumnName="CurrentStationID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
