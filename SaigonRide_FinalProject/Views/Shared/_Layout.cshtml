@@ -3,40 +3,40 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.Title - SaigonRide</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
-<style>
-    .navbar-collapse {
-        display: block !important;
-        height: auto !important;
-        overflow: visible !important;
-    }
-
-    .navbar-nav {
-        display: flex !important;
-        flex-direction: row !important;
-        margin: 0 !important;
-        float: right !important;
-    }
-
-        .navbar-nav > li {
-            float: none !important;
-            display: inline-block !important;
+    <style>
+        .navbar-collapse {
+            display: block !important;
+            height: auto !important;
+            overflow: visible !important;
         }
 
-            .navbar-nav > li > a {
-                padding-left: 15px !important;
-                padding-right: 15px !important;
-                line-height: 50px !important;
-                padding-top: 0 !important;
-                padding-bottom: 0 !important;
+        .navbar-nav {
+            display: flex !important;
+            flex-direction: row !important;
+            margin: 0 !important;
+            float: right !important;
+        }
+
+            .navbar-nav > li {
+                float: none !important;
+                display: inline-block !important;
             }
 
-    .navbar-toggle {
-        display: none !important;
-    }
-</style>
+                .navbar-nav > li > a {
+                    padding-left: 15px !important;
+                    padding-right: 15px !important;
+                    line-height: 50px !important;
+                    padding-top: 0 !important;
+                    padding-bottom: 0 !important;
+                }
+
+        .navbar-toggle {
+            display: none !important;
+        }
+    </style>
 </head>
 <body>
     <div class="navbar navbar-inverse navbar-fixed-top"
@@ -50,39 +50,73 @@
             </div>
             <div class="navbar-collapse collapse pull-right">
                 <ul class="nav navbar-nav">
+
+                    <!-- ALWAYS VISIBLE -->
                     <li>
                         @Html.ActionLink("Dashboard", "Index", "Home", null,
                     new { style = "color: white; font-weight: 500;" })
-                </li>
-                <li>
-                    @Html.ActionLink("Stations", "Index", "Stations", null,
-                new { style = "color: white; font-weight: 500;" })
-            </li>
-            <li>
-                @Html.ActionLink("Vehicles", "Index", "Vehicles", null,
-            new { style = "color: white; font-weight: 500;" })
-        </li>
-        <li>
-            @Html.ActionLink("Rentals", "Index", "RentalTransactions", null,
-        new { style = "color: white; font-weight: 500;" })
-    </li>
-    <li>
-        @Html.ActionLink("Reports", "Index", "Reports", null,
-    new { style = "color: white; font-weight: 500;" })
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="container body-content">
-    @RenderBody()
-    <hr />
-    <footer>
-        <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-    </footer>
-</div>
-@Scripts.Render("~/bundles/jquery")
-@Scripts.Render("~/bundles/bootstrap")
-@RenderSection("scripts", required: false)
+                    </li>
+
+                    <!-- ONLY ADMINS SEE THESE -->
+                    @if (Session["UserType"] != null && Session["UserType"].ToString() == "Admin")
+                    {
+                    <li>
+                        @Html.ActionLink("Stations", "Index", "Stations", null,
+                    new { style = "color: white; font-weight: 500;" })
+                    </li>
+                    <li>
+                        @Html.ActionLink("Vehicles", "Index", "Vehicles", null,
+                    new { style = "color: white; font-weight: 500;" })
+                    </li>
+                    <li>
+                        @Html.ActionLink("Reports", "Index", "Reports", null,
+                    new { style = "color: white; font-weight: 500;" })
+                    </li>
+                    }
+
+                    <!-- ONLY GUESTS (LOCAL/TOURIST) SEE THIS -->
+                    @if (Session["UserType"] != null && (Session["UserType"].ToString() == "Local" || Session["UserType"].ToString() == "Tourist"))
+                    {
+                    <li>
+                        @Html.ActionLink("My Rentals", "Index", "RentalTransactions", null,
+                    new { style = "color: white; font-weight: 500;" })
+                    </li>
+                    }
+
+                    <!-- LOGIN / LOGOUT DYNAMICS -->
+                    @if (Session["FullName"] != null)
+                    {
+                    <li>
+                        <a href="#" style="color: rgba(255,255,255,0.9); font-weight: bold;">
+                            <i class="glyphicon glyphicon-user"></i> @Session["FullName"].ToString() (@Session["UserType"].ToString())
+                        </a>
+                    </li>
+                    <li>
+                        @Html.ActionLink("Logout", "Logout", "Account", null,
+                    new { style = "color: #ffcccc;" })
+                    </li>
+                    }
+                    else
+                    {
+                    <li>
+                        @Html.ActionLink("Login", "Login", "Account", null,
+                    new { style = "color: white; font-weight: bold;" })
+                    </li>
+                    }
+
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - SaigonRide Application</p>
+        </footer>
+    </div>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
 </body>
 </html>
