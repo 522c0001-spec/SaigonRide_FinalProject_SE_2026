@@ -1,0 +1,56 @@
+﻿@model IEnumerable<SaigonRide_FinalProject.Models.RentalTransaction>
+
+@{
+    ViewBag.Title = "My Rentals";
+}
+
+<div style="margin-bottom: 30px;">
+    <h2 style="color: #009A5A; font-weight: bold;">My Rental History</h2>
+    <p class="text-muted">Track your active rides and past trips.</p>
+</div>
+
+<div class="row">
+    @foreach (var item in Model)
+    {
+        bool isActive = item.EndTime == null;
+        string borderColor = isActive ? "#009A5A" : "#ddd";
+        string statusText = isActive ? "ACTIVE RIDE" : "COMPLETED";
+        string statusColor = isActive ? "#009A5A" : "#6c757d";
+
+    <div class="col-md-6" style="margin-bottom: 20px;">
+        <div class="panel panel-default" style="border-radius: 12px; border: 2px solid @borderColor; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+            <div class="panel-body">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 15px;">
+                    <span style="font-weight: bold; font-size: 12px; color: @statusColor;">@statusText</span>
+                    <span class="text-muted" style="font-size: 12px;">@item.StartTime.ToString("MMM dd, yyyy - hh:mm tt")</span>
+                </div>
+
+                <h4 style="font-weight: bold; margin-top: 0;">v-00@(item.VehicleID) - @(item.Vehicle?.Category ?? "Unknown Vehicle")</h4>
+
+                <p class="text-muted" style="margin-bottom: 5px;">
+                    <strong>Pickup:</strong> @(item.Station?.LocationName ?? "Unknown Station")
+                </p>
+
+                @if (!isActive)
+                    {
+                <p class="text-muted" style="margin-bottom: 5px;">
+                    <strong>Drop-off:</strong> @(item.Station1?.LocationName ?? "Unknown Station")
+                </p>
+                <h4 style="color: #003366; font-weight: bold; text-align: right;">
+                    Total: @(item.TotalPaid.HasValue ? item.TotalPaid.Value.ToString("N0") : "0") đ
+                </h4>
+                    }
+                    else
+                    {
+                <div class="alert alert-success" style="padding: 10px; margin-top: 15px; border-radius: 8px;">
+                    <i class="glyphicon glyphicon-time"></i> Timer is running...
+                </div>
+                <div class="text-right">
+                    @Html.ActionLink("End Ride & Checkout", "CheckoutForm", "RentalTransactions", new { id = item.TransactionID }, new { @class="btn btn-danger", style="border-radius: 8px; font-weight: bold;" })
+                </div>
+                    }
+            </div>
+        </div>
+    </div>
+    }
+</div>

@@ -206,5 +206,74 @@ namespace SaigonRide_FinalProject.Controllers
             // Send the user to a "Receipt" page to see their final fare
             return RedirectToAction("Details", new { id = ride.TransactionID });
         }
+        public ActionResult StartRental(int? vehicleId)
+        {
+            if (Session["UserID"] == null) return RedirectToAction("Login", "Account");
+            if (vehicleId == null) return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+
+            var vehicle = db.Vehicles.Find(vehicleId);
+            if (vehicle == null || vehicle.Status != "Available") return HttpNotFound();
+
+            // Determine the base rate per minute based on FR1
+            ViewBag.RatePerMin = vehicle.Category == "Standard Bike" ? 500 :
+                                 vehicle.Category == "Electric Scooter" ? 1500 : 1000;
+
+            ViewBag.Stations = db.Stations.ToList();
+            return View(vehicle);
+        }
+
+        // 2. POST: RentalTransactions/StartRental
+        // Creates the transaction and updates vehicle/station status
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult StartRental(int vehicleId, int startStationId, string paymentMethod)
+        {
+            if (Session["UserID"] == null) return RedirectToAction("Login", "Account");
+
+            var vehicle = db.Vehicles.Find(vehicleId);
+            var station = db.Stations.Find(startStationId);
+
+            if (vehicle != null && station != null)
+            {
+                // Create the active ride
+                RentalTransaction newRide = new RentalTransaction
+                {
+                    UserID = (int)Session["UserID"],
+                    VehicleID = vehicleId,
+                    StartStationID = startStationId,
+                    StartTime = DateTime.Now,
+                    PaymentMethod = paymentMethod
+                    // EndTime, BaseFare, and TotalPaid remain NULL until they return the bike
+                };
+
+                // Update fleet logic
+                vehicle.Status = "In-Transit";
+                station.CurrentInventory -= 1;
+
+                db.RentalTransactions.Add(newRide);
+                db.SaveChanges();
+
+                return RedirectToAction("MyRentals");
+            }
+            return View();
+        }
+
+        // 3. GET: RentalTransactions/MyRentals
+        // Shows the guest their active and past rides
+        public ActionResult MyRentals()
+        {
+            if (Session["UserID"] == null) return RedirectToAction("Login", "Account");
+
+            int currentUserId = (int)Session["UserID"];
+            var userRides = db.RentalTransactions
+                .Where(r => r.UserID == currentUserId)
+                .Include(r => r.Vehicle)
+                .Include(r => r.Station) // Start Station
+                .Include(r => r.Station1) // End Station
+                .OrderByDescending(r => r.StartTime)
+                .ToList();
+
+            return View(userRides);
+        }
     }
 }

@@ -1,0 +1,100 @@
+﻿@model SaigonRide_FinalProject.Models.Vehicle
+
+@{
+    ViewBag.Title = "Rent a Vehicle";
+    var userType = Session["UserType"]?.ToString();
+}
+
+<div class="container" style="max-width: 700px; margin-top: 30px;">
+    <h2 style="color: #003366; font-weight: bold;">Rent a Vehicle</h2>
+    <p class="text-muted"><i class="glyphicon glyphicon-map-marker"></i> @Model.Station.LocationName</p>
+
+    <form action="/RentalTransactions/StartRental" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="vehicleId" value="@Model.VehicleID" />
+        <input type="hidden" name="startStationId" value="@Model.CurrentStationID" />
+
+        <div class="panel panel-default" style="border-radius: 12px; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
+            <div class="panel-body" style="padding: 30px;">
+
+                <h4 style="font-weight: 600; color: #003366; margin-bottom: 20px;">Confirm Rental Details</h4>
+
+                <div class="form-group">
+                    <label class="text-muted">Selected Vehicle</label>
+                    <input type="text" class="form-control" value="v-00@(Model.VehicleID) - @Model.Category" readonly style="background-color: #f9f9f9;" />
+                </div>
+
+                <div class="form-group">
+                    <label class="text-muted">Estimated Trip Duration (minutes)</label>
+                    <input type="number" id="estMinutes" class="form-control" value="30" min="1" onchange="updateEstimate()" />
+                </div>
+
+                <div class="form-group">
+                    <label class="text-muted">Planned Return Station</label>
+                    <select class="form-control">
+                        <option value="">-- Choose destination for estimate --</option>
+                        @foreach (var station in ViewBag.Stations)
+                        {
+                        <option value="@station.StationID">@station.LocationName - District 1</option>
+                        }
+                    </select>
+                </div>
+
+                <div style="background-color: #e8f5e9; border: 1px solid #c8e6c9; border-radius: 8px; padding: 20px; margin-top: 20px; margin-bottom: 30px;">
+                    <h5 style="color: #009A5A; font-weight: bold; margin-top: 0;">Estimated Fare</h5>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                        <span class="text-muted" id="fareBreakdown">Base Fare (30 min)</span>
+                        <span id="fareTotal">0 đ</span>
+                    </div>
+                    <hr style="border-top: 1px solid #c8e6c9; margin: 10px 0;" />
+                    <div style="display: flex; justify-content: space-between; font-weight: bold; color: #009A5A;">
+                        <span>Total</span>
+                        <span id="grandTotal">0 đ</span>
+                    </div>
+                </div>
+
+                <h4 style="font-weight: 600; color: #003366; margin-bottom: 20px;">Select Payment Method</h4>
+
+                <div class="form-group">
+                    <select name="paymentMethod" class="form-control input-lg" required style="border: 1px solid #009A5A; border-radius: 8px;">
+                        <option value="">-- Select Method --</option>
+                        @if (userType == "Local")
+                        {
+                        <option value="MoMo">MoMo</option>
+                        <option value="VNPay">VNPay</option>
+                        <option value="Cash">Cash</option>
+                        }
+                        else
+                        {
+                        <option value="ApplePay">Apple Pay (Passport Verified)</option>
+                        <option value="PayPal">PayPal</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="alert alert-info" style="border-radius: 8px; background-color: #f0f8ff; border-color: #cce5ff; color: #004085;">
+                    <i class="glyphicon glyphicon-info-sign"></i> This is an authorization hold. Final payment and 15% location discounts are calculated upon returning the vehicle.
+                </div>
+
+                <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+                    <a href="javascript:history.back()" class="btn btn-default" style="width: 48%; padding: 12px; border-radius: 8px; background-color: #e2e8f0; border: none; font-weight: bold; color: #475569;">Back</a>
+                    <button type="submit" class="btn btn-success" style="width: 48%; padding: 12px; border-radius: 8px; background-color: #009A5A; border: none; font-weight: bold;">Start Rental</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Simple JS to make the Figma math work dynamically
+    const ratePerMin = @ViewBag.RatePerMin;
+    function updateEstimate() {
+        const mins = document.getElementById('estMinutes').value;
+        const total = (mins * ratePerMin).toLocaleString('vi-VN') + ' đ';
+        document.getElementById('fareBreakdown').innerText = `Base Fare (${mins} min)`;
+        document.getElementById('fareTotal').innerText = total;
+        document.getElementById('grandTotal').innerText = total;
+    }
+    // Run once on load
+    window.onload = updateEstimate;
+</script>
