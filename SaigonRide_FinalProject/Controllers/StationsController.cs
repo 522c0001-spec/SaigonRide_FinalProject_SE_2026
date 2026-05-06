@@ -38,16 +38,26 @@ namespace SaigonRide_FinalProject.Controllers
         // GET: Stations/Create
         public ActionResult Create()
         {
+            // SECURITY CHECK: Kick out anyone who isn't an Admin
+            if (Session["UserType"] == null || Session["UserType"].ToString() != "Admin")
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
             return View();
         }
 
         // POST: Stations/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "StationID,LocationName,MaxCapacity,CurrentInventory")] Station station)
         {
+            // SECURITY CHECK
+            if (Session["UserType"] == null || Session["UserType"].ToString() != "Admin")
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
             if (ModelState.IsValid)
             {
                 db.Stations.Add(station);
@@ -61,6 +71,12 @@ namespace SaigonRide_FinalProject.Controllers
         // GET: Stations/Edit/5
         public ActionResult Edit(int? id)
         {
+            // SECURITY CHECK
+            if (Session["UserType"] == null || Session["UserType"].ToString() != "Admin")
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -74,12 +90,16 @@ namespace SaigonRide_FinalProject.Controllers
         }
 
         // POST: Stations/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "StationID,LocationName,MaxCapacity,CurrentInventory")] Station station)
         {
+            // SECURITY CHECK
+            if (Session["UserType"] == null || Session["UserType"].ToString() != "Admin")
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
             if (ModelState.IsValid)
             {
                 db.Entry(station).State = EntityState.Modified;
@@ -92,6 +112,12 @@ namespace SaigonRide_FinalProject.Controllers
         // GET: Stations/Delete/5
         public ActionResult Delete(int? id)
         {
+            // SECURITY CHECK
+            if (Session["UserType"] == null || Session["UserType"].ToString() != "Admin")
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -109,6 +135,12 @@ namespace SaigonRide_FinalProject.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
+            // SECURITY CHECK
+            if (Session["UserType"] == null || Session["UserType"].ToString() != "Admin")
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
             Station station = db.Stations.Find(id);
             db.Stations.Remove(station);
             db.SaveChanges();

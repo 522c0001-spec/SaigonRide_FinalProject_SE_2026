@@ -128,5 +128,23 @@ namespace SaigonRide_FinalProject.Controllers
             }
             base.Dispose(disposing);
         }
+        public ActionResult BrowseStation(int? stationId)
+        {
+            if (stationId == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            // Find the station name so we can display it nicely on the page
+            ViewBag.StationName = db.Stations.Find(stationId).LocationName;
+
+            // LINQ Query: Get all vehicles AT this station that are AVAILABLE
+            var availableVehicles = db.Vehicles
+                .Where(v => v.CurrentStationID == stationId && v.Status == "Available")
+                .Include(v => v.Station)
+                .ToList();
+
+            return View(availableVehicles);
+        }
     }
 }

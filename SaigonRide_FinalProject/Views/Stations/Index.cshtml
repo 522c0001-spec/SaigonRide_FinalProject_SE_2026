@@ -7,12 +7,16 @@
 <div style="margin-bottom: 20px;">
     <h2 style="color: #009A5A; font-weight: bold;">Station Network</h2>
     <p class="text-muted">Find available vehicles at stations across Ho Chi Minh City</p>
+
+    <!-- ONLY ADMIN CAN SEE THE CREATE BUTTON -->
+    @if (Session["UserType"] != null && Session["UserType"].ToString() == "Admin")
+    {
     @Html.ActionLink("Create New Station", "Create", null, new { @class = "btn btn-success", style="background-color: #009A5A; border: none;" })
+    }
 </div>
 
 <div class="row">
     @foreach (var item in Model) {
-        // Calculate the capacity percentage for the progress bar
         double utilPercentage = item.MaxCapacity > 0 ? ((double)item.CurrentInventory / item.MaxCapacity) * 100 : 0;
         string barColor = utilPercentage < 20 ? "progress-bar-danger" : "progress-bar-success";
 
@@ -32,9 +36,18 @@
                 </div>
 
                 <div class="text-center" style="margin-top: 20px;">
+                    @if (Session["UserType"] != null && Session["UserType"].ToString() == "Admin")
+                        {
+                            <!-- ADMIN CONTROLS -->
                     @Html.ActionLink("Edit", "Edit", new { id=item.StationID }, new { @class="btn btn-sm btn-default" })
                     @Html.ActionLink("Details", "Details", new { id=item.StationID }, new { @class="btn btn-sm btn-info", style="background-color: #3b82f6; border: none;" })
                     @Html.ActionLink("Delete", "Delete", new { id=item.StationID }, new { @class="btn btn-sm btn-danger" })
+                        }
+                        else
+                        {
+ <!-- GUEST CONTROLS -->
+                    @Html.ActionLink("Rent a Vehicle", "BrowseStation", "Vehicles", new { stationId = item.StationID }, new { @class="btn btn-success btn-block", style="background-color: #009A5A; border: none; font-weight: bold;" })
+                        }
                 </div>
             </div>
         </div>

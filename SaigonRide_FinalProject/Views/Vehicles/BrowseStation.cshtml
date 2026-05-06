@@ -1,0 +1,51 @@
+﻿@model IEnumerable<SaigonRide_FinalProject.Models.Vehicle>
+
+@{
+    ViewBag.Title = "Rent a Vehicle";
+}
+
+<div style="margin-bottom: 30px;">
+    <h2 style="color: #003366; font-weight: bold; margin-bottom: 5px;">Rent a Vehicle</h2>
+    <p class="text-muted" style="font-size: 16px;"><i class="glyphicon glyphicon-map-marker"></i> @ViewBag.StationName</p>
+</div>
+
+<div class="panel panel-default" style="border-radius: 12px; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.05); max-width: 600px;">
+    <div class="panel-body" style="padding: 30px;">
+        <h4 style="font-weight: 600; margin-bottom: 20px; color: #003366;">Select a Vehicle</h4>
+
+        @if (!Model.Any())
+        {
+        <div class="alert alert-warning" style="border-radius: 8px;">
+            No vehicles are currently available at this station.
+        </div>
+        }
+        else
+        {
+            foreach (var item in Model)
+            {
+                // Logic to display the correct price based on your FR1 requirements
+                string price = item.Category == "Standard Bike" ? "500 đ/min" :
+                               item.Category == "Electric Scooter" ? "1.500 đ/min" : "1.000 đ/min";
+
+        <div style="margin-bottom: 20px;">
+            <span style="font-weight: 500; color: #333; margin-bottom: 10px; display: block;">@item.Category</span>
+
+            <div style="border: 1px solid #e0e0e0; border-radius: 10px; padding: 15px; display: flex; justify-content: space-between; align-items: center; transition: box-shadow 0.2s;">
+                <div>
+                    <h5 style="font-weight: bold; margin: 0 0 8px 0; color: #003366;">
+                        <!-- Using a generic bike icon -->
+                        <i class="glyphicon glyphicon-bed" style="color: #555; margin-right: 5px;"></i> v-00@(item.VehicleID)
+                    </h5>
+                    <span style="color: #009A5A; font-weight: 600; font-size: 14px;">@price</span>
+                </div>
+
+                <div>
+                    <!-- This button will link to Dũng's future StartRental logic -->
+                    @Html.ActionLink("Select", "StartRental", "RentalTransactions", new { vehicleId = item.VehicleID }, new { @class="btn btn-success", style="background-color: #009A5A; border: none; border-radius: 6px; padding: 8px 20px; font-weight: bold;" })
+                </div>
+            </div>
+        </div>
+            }
+        }
+    </div>
+</div>
