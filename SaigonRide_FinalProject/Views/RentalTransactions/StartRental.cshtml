@@ -98,3 +98,59 @@
     // Run once on load
     window.onload = updateEstimate;
 </script>
+
+@if (Session["UserType"] != null && Session["UserType"].ToString() == "Tourist")
+{
+<div id="passportModal" class="modal fade" role="dialog" data-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content" style="border-radius: 12px; border: none; overflow: hidden;">
+            <div class="modal-header" style="background-color: #003366; color: white;">
+                <button type="button" class="close" data-dismiss="modal" style="color: white; opacity: 0.8;">&times;</button>
+                <h4 class="modal-title" style="font-weight: bold;">
+                    <i class="glyphicon glyphicon-globe"></i> Passport Verification Required
+                </h4>
+            </div>
+            <div class="modal-body" style="padding: 25px;">
+                <p class="text-muted" style="margin-bottom: 20px;">
+                    As per Ho Chi Minh City regulations, foreign tourists must verify their identity and authorize a security hold before starting a rental.
+                </p>
+
+                <div class="form-group">
+                    <label style="color: #003366;">Upload Passport Photo (Data Page)</label>
+                    <input type="file" class="form-control" accept="image/*" style="border: 1px dashed #ccc; padding: 5px; height: auto;" />
+                </div>
+
+                <div class="alert alert-warning" style="border-radius: 8px; font-size: 13px; margin-top: 20px;">
+                    <strong><i class="glyphicon glyphicon-cog"></i> System Demo:</strong> Uploading any file will simulate a successful AI verification and authorize your Apple Pay / PayPal account.
+                </div>
+            </div>
+            <div class="modal-footer" style="background-color: #f9f9f9;">
+                <button type="button" class="btn btn-default" data-dismiss="modal" style="border-radius: 8px;">Cancel</button>
+                <button type="button" class="btn btn-success" id="confirmVerificationBtn" style="background-color: #009A5A; border: none; border-radius: 8px; font-weight: bold;">Verify & Authorize Rental</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 1. Intercept the main form submission
+    document.querySelector('form').addEventListener('submit', function (e) {
+        // If the passport hasn't been verified yet...
+        if (!window.passportVerified) {
+            e.preventDefault(); // Stop the form from submitting to the server
+            $('#passportModal').modal('show'); // Pop open the Bootstrap modal
+        }
+    });
+
+    // 2. Listen for the click on the Modal's "Verify" button
+    document.getElementById('confirmVerificationBtn').addEventListener('click', function () {
+        window.passportVerified = true; // Mark as verified in memory
+        $('#passportModal').modal('hide'); // Close the pop-up
+
+        // Add a tiny delay so the modal animation finishes, then submit the real form!
+        setTimeout(function () {
+            document.querySelector('form').submit();
+        }, 500);
+    });
+</script>
+}
