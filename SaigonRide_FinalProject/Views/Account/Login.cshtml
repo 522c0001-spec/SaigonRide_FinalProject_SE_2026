@@ -25,21 +25,6 @@
             max-width: 450px;
         }
 
-        .role-btn {
-            border: 1px solid #ccc;
-            color: #555;
-            background: white;
-            border-radius: 8px;
-            padding: 10px;
-            width: 48%;
-        }
-
-            .role-btn.active {
-                background-color: #009A5A;
-                color: white;
-                border-color: #009A5A;
-            }
-
         .demo-box {
             background-color: #f0f4ff;
             border-radius: 8px;
@@ -53,11 +38,6 @@
 <body>
     <div class="login-card">
         <h2 class="text-center" style="color: #004d30; font-weight: bold; margin-bottom: 25px;">Sign In to SaigonRide</h2>
-
-        <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
-            <button class="btn role-btn active"><i class="glyphicon glyphicon-user"></i> Local Commuter</button>
-            <button class="btn role-btn"><i class="glyphicon glyphicon-globe"></i> Tourist</button>
-        </div>
 
         <form action="/Account/Login" method="post">
             <div class="form-group">
