@@ -152,60 +152,6 @@ namespace SaigonRide_FinalProject.Controllers
             ViewBag.Stations = db.Stations.ToList();
             return View(ride);
         }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Checkout(int transactionId, int endStationId, string paymentMethod)
-        {
-            // 1. Find the active ride, the vehicle, and the destination station in the database
-            var ride = db.RentalTransactions.Find(transactionId);
-            var vehicle = db.Vehicles.Find(ride.VehicleID);
-            var endStation = db.Stations.Find(endStationId);
-
-            if (ride == null || endStation == null)
-            {
-                return HttpNotFound();
-            }
-
-            // 2. Stop the clock and calculate total minutes
-            ride.EndTime = DateTime.Now;
-            ride.EndStationID = endStationId;
-
-            // We use Math.Ceiling to round up (e.g., 5.1 minutes becomes 6 minutes)
-            double totalMinutes = Math.Ceiling((ride.EndTime.Value - ride.StartTime).TotalMinutes);
-
-            // 3. Figure out the Base Fare based on the vehicle category
-            decimal ratePerMinute = vehicle.Category == "E-Scooter" ? 1500m : 500m;
-            ride.BaseFare = (decimal)totalMinutes * ratePerMinute;
-
-            // 4. Check the Station Capacity for the 15% Discount
-            // Formula: Current / Max
-            double capacityPercentage = (double)endStation.CurrentInventory / endStation.MaxCapacity;
-
-            if (capacityPercentage < 0.20) // Less than 20% full
-            {
-                ride.AppliedDiscount = ride.BaseFare * 0.15m; // 15% off
-            }
-            else
-            {
-                ride.AppliedDiscount = 0m; // No discount
-            }
-
-            // 5. Calculate Final Price
-            ride.TotalPaid = ride.BaseFare - ride.AppliedDiscount;
-            ride.PaymentMethod = paymentMethod;
-
-            // 6. Update the physical Vehicle and Station statuses
-            vehicle.Status = "Available";
-            vehicle.CurrentStationID = endStationId;
-            endStation.CurrentInventory += 1;
-
-            // 7. Save everything to SQL Server
-            db.SaveChanges();
-
-            // Send the user to a "Receipt" page to see their final fare
-            return RedirectToAction("Details", new { id = ride.TransactionID });
-        }
         public ActionResult StartRental(int? vehicleId)
         {
             if (Session["UserID"] == null) return RedirectToAction("Login", "Account");
@@ -274,6 +220,66 @@ namespace SaigonRide_FinalProject.Controllers
                 .ToList();
 
             return View(userRides);
+        }
+
+        // POST: RentalTransactions/Checkout
+        // This is the climax of the application where all the FR1 & FR2 math happens
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Checkout(int transactionId, int endStationId, string paymentMethod)
+        {
+            if (Session["UserID"] == null) return RedirectToAction("Login", "Account");
+
+            var ride = db.RentalTransactions.Find(transactionId);
+            var endStation = db.Stations.Find(endStationId);
+            var vehicle = db.Vehicles.Find(ride.VehicleID);
+
+            if (ride != null && endStation != null && vehicle != null)
+            {
+                // 1. Stop the stopwatch
+                ride.EndTime = DateTime.Now;
+
+                // Calculate minutes (For testing purposes, if you end it instantly, we force 1 minute so the fare isn't 0)
+                var durationMinutes = (decimal)(ride.EndTime.Value - ride.StartTime).TotalMinutes;
+                if (durationMinutes < 1) durationMinutes = 1;
+
+                // 2. FR1: Calculate Base Fare based on Vehicle Category
+                decimal ratePerMinute = vehicle.Category == "Standard Bike" ? 500 :
+                                        vehicle.Category == "Electric Scooter" ? 1500 : 1000;
+
+                ride.BaseFare = Math.Round(durationMinutes * ratePerMinute);
+
+                // 3. FR2: Check Destination Station Capacity for the 15% Discount
+                double utilPercentage = endStation.MaxCapacity > 0 ?
+                                        ((double)endStation.CurrentInventory / endStation.MaxCapacity) * 100 : 100;
+
+                if (utilPercentage < 20)
+                {
+                    // Station is almost empty, give 15% off!
+                    ride.AppliedDiscount = Math.Round(ride.BaseFare.Value * 0.15m);
+                }
+                else
+                {
+                    ride.AppliedDiscount = 0;
+                }
+
+                // Finalize Transaction
+                ride.TotalPaid = ride.BaseFare - ride.AppliedDiscount;
+                ride.PaymentMethod = paymentMethod;
+                ride.EndStationID = endStationId;
+
+                // 4. Update the Fleet and Station Inventory
+                vehicle.Status = "Available";
+                vehicle.CurrentStationID = endStationId;
+                endStation.CurrentInventory += 1; // Add the bike to the new station
+
+                db.SaveChanges();
+
+                // Send them back to their dashboard to see the final receipt
+                return RedirectToAction("MyRentals");
+            }
+
+            return HttpNotFound();
         }
     }
 }
