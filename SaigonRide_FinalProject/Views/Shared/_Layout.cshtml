@@ -6,7 +6,81 @@
     <title>@ViewBag.Title - SaigonRide</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
     <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #0f172a;
+        }
+
+        /* Glassmorphism Navbar */
+        .navbar-inverse {
+            background-color: rgba(255, 255, 255, 0.85) !important;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0, 154, 90, 0.1) !important;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+        }
+
+        .navbar-brand, .nav > li > a {
+            color: #003366 !important;
+            transition: color 0.3s ease;
+        }
+
+            .nav > li > a:hover {
+                color: #009A5A !important;
+            }
+
+        .glow-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+        }
+
+        .glow-card {
+            position: relative;
+            background: rgba(0, 154, 90, 0.1);
+            border-radius: 16px;
+            padding: 1px;
+            transition: transform 0.2s ease;
+            width: 100%;
+        }
+
+            .glow-card:hover {
+                transform: translateY(-3px);
+            }
+
+            .glow-card::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                height: 100%;
+                width: 100%;
+                background: radial-gradient(600px circle at var(--mouse-x, 0) var(--mouse-y, 0), rgba(0, 154, 90, 0.6), transparent 40%);
+                z-index: 1;
+                opacity: 0;
+                transition: opacity 500ms;
+                border-radius: inherit;
+            }
+
+            .glow-card:hover::before {
+                opacity: 1;
+            }
+
+        .glow-content {
+            position: relative;
+            background: #ffffff;
+            height: 100%;
+            border-radius: 15px;
+            z-index: 2;
+            padding: 24px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+        }
+
         .navbar-collapse {
             display: block !important;
             height: auto !important;
@@ -39,80 +113,63 @@
     </style>
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top"
-         style="background-color: #009A5A; border-color: #007a47;">
+    <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
-                @Html.ActionLink("SaigonRide", "Index", "Home",
-                    new { area = "" },
-                    new { @class = "navbar-brand",
-                          style = "color: white; font-weight: bold; font-size: 24px;" })
+                @Html.ActionLink("SaigonRide", "Index", "Home", new { area = "" }, new { @class = "navbar-brand", style = "font-weight: 800; font-size: 24px; color: #009A5A !important;" })
             </div>
             <div class="navbar-collapse collapse pull-right">
                 <ul class="nav navbar-nav">
-
-                    <li>
-                        @Html.ActionLink("Dashboard", "Index", "Home", null,
-                    new { style = "color: white; font-weight: 500;" })
-                    </li>
+                    <li>@Html.ActionLink("Dashboard", "Index", "Home", null, new { style = "font-weight: 600;" })</li>
 
                     @if (Session["UserType"] != null && Session["UserType"].ToString() == "Admin")
                     {
-                    <li>
-                        @Html.ActionLink("Stations", "Index", "Stations", null,
-                    new { style = "color: white; font-weight: 500;" })
-                    </li>
-                    <li>
-                        @Html.ActionLink("Vehicles", "Index", "Vehicles", null,
-                    new { style = "color: white; font-weight: 500;" })
-                    </li>
-                    <li>
-                        @Html.ActionLink("Reports", "Index", "Reports", null,
-                    new { style = "color: white; font-weight: 500;" })
-                    </li>
+                    <li>@Html.ActionLink("Stations", "Index", "Stations", null, new { style = "font-weight: 600;" })</li>
+                    <li>@Html.ActionLink("Vehicles", "Index", "Vehicles", null, new { style = "font-weight: 600;" })</li>
+                    <li>@Html.ActionLink("Reports", "Index", "Reports", null, new { style = "font-weight: 600;" })</li>
                     }
 
                     @if (Session["UserType"] != null && (Session["UserType"].ToString() == "Local" || Session["UserType"].ToString() == "Tourist"))
                     {
-                    <li>
-                        @Html.ActionLink("My Rentals", "MyRentals", "RentalTransactions", null,
-                    new { style = "color: white; font-weight: 500;" })
-                    </li>
+                    <li>@Html.ActionLink("My Rentals", "MyRentals", "RentalTransactions", null, new { style = "font-weight: 600;" })</li>
                     }
 
                     @if (Session["FullName"] != null)
                     {
-                    <li>
-                        <a href="#" style="color: rgba(255,255,255,0.9); font-weight: bold;">
-                            <i class="glyphicon glyphicon-user"></i> @Session["FullName"].ToString() (@Session["UserType"].ToString())
-                        </a>
-                    </li>
-                    <li>
-                        @Html.ActionLink("Logout", "Logout", "Account", null,
-                    new { style = "color: #ffcccc;" })
-                    </li>
+                    <li><a href="#" style="font-weight: 700; color: #009A5A !important;"><i class="glyphicon glyphicon-user"></i> @Session["FullName"].ToString()</a></li>
+                    <li>@Html.ActionLink("Logout", "Logout", "Account", null, new { style = "color: #ef4444 !important; font-weight: 600;" })</li>
                     }
                     else
                     {
-                    <li>
-                        @Html.ActionLink("Login", "Login", "Account", null,
-                    new { style = "color: white; font-weight: bold;" })
-                    </li>
+                    <li>@Html.ActionLink("Login", "Login", "Account", null, new { style = "font-weight: 700; color: #009A5A !important;" })</li>
                     }
-
                 </ul>
             </div>
         </div>
     </div>
-    <div class="container body-content">
+
+    <div class="container body-content" style="margin-top: 80px;">
         @RenderBody()
-        <hr />
-        <footer>
+        <hr style="border-top: 1px solid #e2e8f0; margin-top: 50px;" />
+        <footer style="color: #64748b; font-size: 14px;">
             <p>&copy; @DateTime.Now.Year - SaigonRide Application</p>
         </footer>
     </div>
+
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
+
+    <script>
+        document.body.onmousemove = e => {
+            for(const card of document.querySelectorAll('.glow-card')) {
+                const rect = card.getBoundingClientRect(),
+                      x = e.clientX - rect.left,
+                      y = e.clientY - rect.top;
+                card.style.setProperty("--mouse-x", `${x}px`);
+                card.style.setProperty("--mouse-y", `${y}px`);
+            }
+        };
+    </script>
     @RenderSection("scripts", required: false)
 </body>
 </html>

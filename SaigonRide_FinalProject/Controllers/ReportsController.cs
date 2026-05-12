@@ -13,7 +13,6 @@ namespace SaigonRide_FinalProject.Controllers
 
         public ActionResult Index()
         {
-            // Dũng's FR5: Revenue by Category
             var revenueData = db.RentalTransactions
                 .Where(r => r.TotalPaid != null)
                 .GroupBy(r => r.Vehicle.Category)
@@ -22,8 +21,6 @@ namespace SaigonRide_FinalProject.Controllers
             ViewBag.RevenueData = revenueData;
             ViewBag.TotalRevenue = revenueData.Values.Sum();
             ViewBag.TotalRides = db.RentalTransactions.Count(r => r.TotalPaid != null);
-
-            // Tú's FR5: Station Inventory Utilization
             ViewBag.StationData = db.Stations.ToList();
 
             return View();

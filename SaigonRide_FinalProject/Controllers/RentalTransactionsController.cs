@@ -16,16 +16,16 @@ namespace SaigonRide_FinalProject.Controllers
 
         // GET: RentalTransactions
         public ActionResult Index()
-        {
-            // SECURITY CHECK: If the user is NOT an Admin, kick them to their personal page
-            if (Session["UserType"] != null && Session["UserType"].ToString() != "Admin")
-            {
-                return RedirectToAction("MyRentals");
-            }
+{
+    // SECURITY CHECK: If the user is NOT an Admin, kick them to their personal page
+    if (Session["UserType"] != null && Session["UserType"].ToString() != "Admin")
+    {
+        return RedirectToAction("MyRentals");
+    }
 
-            var rentalTransactions = db.RentalTransactions.Include(r => r.Station).Include(r => r.Station1).Include(r => r.User).Include(r => r.Vehicle);
-            return View(rentalTransactions.ToList());
-        }
+    var rentalTransactions = db.RentalTransactions.Include(r => r.Station).Include(r => r.Station1).Include(r => r.User).Include(r => r.Vehicle);
+    return View(rentalTransactions.ToList());
+}
 
         // GET: RentalTransactions/Details/5
         public ActionResult Details(int? id)
@@ -229,7 +229,6 @@ namespace SaigonRide_FinalProject.Controllers
         }
 
         // POST: RentalTransactions/Checkout
-        // This is the climax of the application where all the FR1 & FR2 math happens
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Checkout(int transactionId, int endStationId, string paymentMethod)
@@ -261,7 +260,7 @@ namespace SaigonRide_FinalProject.Controllers
 
                 if (utilPercentage < 20)
                 {
-                    // Station is almost empty, give 15% off!
+                    // Station is almost empty, give 15% off
                     ride.AppliedDiscount = Math.Round(ride.BaseFare.Value * 0.15m);
                 }
                 else

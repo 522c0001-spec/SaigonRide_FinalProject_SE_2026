@@ -38,7 +38,7 @@ namespace SaigonRide_FinalProject.Controllers
         // GET: Stations/Create
         public ActionResult Create()
         {
-            // SECURITY CHECK: Kick out anyone who isn't an Admin
+            // SECURITY CHECK: Kick out anyone who isnt an admin
             if (Session["UserType"] == null || Session["UserType"].ToString() != "Admin")
             {
                 return RedirectToAction("Login", "Account");

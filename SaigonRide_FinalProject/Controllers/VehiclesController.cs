@@ -135,10 +135,10 @@ namespace SaigonRide_FinalProject.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            // Find the station name so we can display it nicely on the page
+            // Find the station name to display
             ViewBag.StationName = db.Stations.Find(stationId).LocationName;
 
-            // LINQ Query: Get all vehicles AT this station that are AVAILABLE
+            // get all vehicles at this station that are "available"
             var availableVehicles = db.Vehicles
                 .Where(v => v.CurrentStationID == stationId && v.Status == "Available")
                 .Include(v => v.Station)
