@@ -53,7 +53,7 @@ namespace SaigonRide_FinalProject.Controllers
             if (ModelState.IsValid)
             {
                 db.Vehicles.Add(vehicle);
-                db.SaveChanges();
+                    db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
