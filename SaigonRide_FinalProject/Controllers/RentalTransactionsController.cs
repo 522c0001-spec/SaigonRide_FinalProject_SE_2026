@@ -17,6 +17,12 @@ namespace SaigonRide_FinalProject.Controllers
         // GET: RentalTransactions
         public ActionResult Index()
         {
+            // SECURITY CHECK: If the user is NOT an Admin, kick them to their personal page
+            if (Session["UserType"] != null && Session["UserType"].ToString() != "Admin")
+            {
+                return RedirectToAction("MyRentals");
+            }
+
             var rentalTransactions = db.RentalTransactions.Include(r => r.Station).Include(r => r.Station1).Include(r => r.User).Include(r => r.Vehicle);
             return View(rentalTransactions.ToList());
         }

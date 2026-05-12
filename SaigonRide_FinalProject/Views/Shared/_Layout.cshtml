@@ -51,13 +51,11 @@
             <div class="navbar-collapse collapse pull-right">
                 <ul class="nav navbar-nav">
 
-                    <!-- ALWAYS VISIBLE -->
                     <li>
                         @Html.ActionLink("Dashboard", "Index", "Home", null,
                     new { style = "color: white; font-weight: 500;" })
                     </li>
 
-                    <!-- ONLY ADMINS SEE THESE -->
                     @if (Session["UserType"] != null && Session["UserType"].ToString() == "Admin")
                     {
                     <li>
@@ -74,16 +72,14 @@
                     </li>
                     }
 
-                    <!-- ONLY GUESTS (LOCAL/TOURIST) SEE THIS -->
                     @if (Session["UserType"] != null && (Session["UserType"].ToString() == "Local" || Session["UserType"].ToString() == "Tourist"))
                     {
                     <li>
-                        @Html.ActionLink("My Rentals", "Index", "RentalTransactions", null,
+                        @Html.ActionLink("My Rentals", "MyRentals", "RentalTransactions", null,
                     new { style = "color: white; font-weight: 500;" })
                     </li>
                     }
 
-                    <!-- LOGIN / LOGOUT DYNAMICS -->
                     @if (Session["FullName"] != null)
                     {
                     <li>
