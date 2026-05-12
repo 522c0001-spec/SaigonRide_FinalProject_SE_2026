@@ -1,29 +1,55 @@
-﻿using SaigonRide_FinalProject.Models;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
+using SaigonRide_FinalProject.Models;
 
 namespace SaigonRide_FinalProject.Controllers
 {
     public class ReportsController : Controller
     {
+        // db check
         private SaigonRideDBEntities db = new SaigonRideDBEntities();
 
-        public ActionResult Index()
+        // get reports
+        public ActionResult Index(string filter = "AllTime")
         {
-            var revenueData = db.RentalTransactions
-                .Where(r => r.TotalPaid != null)
-                .GroupBy(r => r.Vehicle.Category)
-                .ToDictionary(g => g.Key, g => g.Sum(r => r.TotalPaid.Value));
+            // check if admin
+            if (Session["UserType"] == null || Session["UserType"].ToString() != "Admin")
+            {
+                return RedirectToAction("Login", "Account");
+            }
 
-            ViewBag.RevenueData = revenueData;
-            ViewBag.TotalRevenue = revenueData.Values.Sum();
-            ViewBag.TotalRides = db.RentalTransactions.Count(r => r.TotalPaid != null);
-            ViewBag.StationData = db.Stations.ToList();
+            // time filter stuff
+            DateTime startDate = DateTime.MinValue;
+            DateTime now = DateTime.Now;
 
-            return View();
+            if (filter == "Day") startDate = now.Date;
+            else if (filter == "Week") startDate = now.AddDays(-7);
+            else if (filter == "Month") startDate = now.AddMonths(-1);
+
+            // 1. safe database query for revenue grouping (doing math inside sql server instead of c#)
+            var revList = db.RentalTransactions
+                .Where(t => t.StartTime >= startDate && t.Vehicle != null && t.Vehicle.Category != null)
+                .GroupBy(t => t.Vehicle.Category)
+                .Select(g => new { Category = g.Key, Total = g.Sum(t => t.TotalPaid ?? 0) })
+                .ToList();
+
+            ViewBag.RevByCategory = revList.ToDictionary(x => x.Category, x => x.Total);
+
+            // 2. get regular transaction stats
+            var transactions = db.RentalTransactions
+                                 .Where(t => t.StartTime >= startDate)
+                                 .ToList();
+
+            ViewBag.CurrentFilter = filter;
+            ViewBag.TotalRevenue = transactions.Sum(t => t.TotalPaid ?? 0);
+            ViewBag.TotalRides = transactions.Count;
+
+            // 3. send all vehicles to view for the math stuff
+            ViewBag.AllVehicles = db.Vehicles.ToList();
+
+            var stations = db.Stations.ToList();
+            return View(stations);
         }
     }
 }

@@ -1,66 +1,123 @@
-﻿@{
+﻿@model IEnumerable<SaigonRide_FinalProject.Models.Station>
+
+@{
     ViewBag.Title = "System Reports";
+    var currentFilter = ViewBag.CurrentFilter as string;
+    var allVehicles = ViewBag.AllVehicles as List<SaigonRide_FinalProject.Models.Vehicle>;
+    var revByCategory = ViewBag.RevByCategory as Dictionary<string, double>;
 }
 
-<h2 style="color: #009A5A; font-weight: bold;">System Reports</h2>
-<p class="text-muted">Analytics and insights</p>
-<hr />
+<div style="margin-bottom: 30px; margin-top: 20px;">
+    <h2 style="color: #003366; font-weight: 800; font-size: 36px; letter-spacing: -1px;">System Reports</h2>
+    <p style="color: #64748b; font-size: 18px;">Analytics, revenue, and fleet utilization</p>
+</div>
 
-<!-- Dũng's Revenue Report -->
-<div class="row">
-    <div class="col-md-4">
-        <div class="panel panel-default" style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);">
-            <div class="panel-body text-center">
-                <h4 class="text-muted">Total Revenue</h4>
-                <h2 style="color: #009A5A; font-weight: bold;">@ViewBag.TotalRevenue.ToString("N0") ₫</h2>
-            </div>
+<div style="margin-bottom: 30px; display: flex; gap: 10px;">
+    <a href="/Reports/Index?filter=Day" class="btn @(currentFilter == "Day" ? "btn-success" : "btn-default")" style="@(currentFilter == "Day" ? "background-color: #009A5A; border:none; color:white; font-weight:bold;" : "font-weight:bold; color: #475569;")">Today</a>
+    <a href="/Reports/Index?filter=Week" class="btn @(currentFilter == "Week" ? "btn-success" : "btn-default")" style="@(currentFilter == "Week" ? "background-color: #009A5A; border:none; color:white; font-weight:bold;" : "font-weight:bold; color: #475569;")">This Week</a>
+    <a href="/Reports/Index?filter=Month" class="btn @(currentFilter == "Month" ? "btn-success" : "btn-default")" style="@(currentFilter == "Month" ? "background-color: #009A5A; border:none; color:white; font-weight:bold;" : "font-weight:bold; color: #475569;")">This Month</a>
+    <a href="/Reports/Index?filter=AllTime" class="btn @(currentFilter == "AllTime" ? "btn-success" : "btn-default")" style="@(currentFilter == "AllTime" ? "background-color: #009A5A; border:none; color:white; font-weight:bold;" : "font-weight:bold; color: #475569;")">All Time</a>
+</div>
+
+<div class="row" style="margin-bottom: 30px;">
+    <div class="col-md-6">
+        <div class="glow-content" style="padding: 24px; text-align: center;">
+            <h4 style="color: #64748b; font-weight: 600; margin-top: 0;">Total Revenue</h4>
+            <h2 style="color: #009A5A; font-weight: 800; margin-bottom: 0;">@string.Format("{0:N0}", ViewBag.TotalRevenue) đ</h2>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="panel panel-default" style="border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.05);">
-            <div class="panel-body text-center">
-                <h4 class="text-muted">Total Rides</h4>
-                <h2 style="color: #3b82f6; font-weight: bold;">@ViewBag.TotalRides</h2>
-            </div>
+    <div class="col-md-6">
+        <div class="glow-content" style="padding: 24px; text-align: center;">
+            <h4 style="color: #64748b; font-weight: 600; margin-top: 0;">Total Rides</h4>
+            <h2 style="color: #003366; font-weight: 800; margin-bottom: 0;">@ViewBag.TotalRides</h2>
         </div>
     </div>
 </div>
 
-<h4 style="margin-top: 30px;">Revenue by Vehicle Category</h4>
-<table class="table table-bordered table-striped" style="background-color: white;">
-    <tr style="background-color: #009A5A; color: white;">
-        <th>Vehicle Category</th>
-        <th>Revenue Generated</th>
-    </tr>
-    @foreach (var item in ViewBag.RevenueData)
-    {
-    <tr>
-        <td>@item.Key</td>
-        <td style="font-weight: bold;">@item.Value.ToString("N0") ₫</td>
-    </tr>
-    }
-</table>
+<div class="glow-content" style="padding: 24px; margin-bottom: 40px;">
+    <h3 style="margin-top: 0; color: #0f172a; font-weight: 700;">Revenue by Vehicle Category</h3>
+    <table class="table table-hover" style="margin-top: 20px;">
+        <thead>
+            <tr style="background-color: #009A5A; color: white;">
+                <th style="border-radius: 8px 0 0 0;">Vehicle Category</th>
+                <th style="border-radius: 0 8px 0 0;">Revenue Generated</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (revByCategory != null && revByCategory.Count > 0)
+            {
+                foreach (var cat in revByCategory)
+                {
+            <tr>
+                <td style="font-weight: 600;">@cat.Key</td>
+                <td style="font-weight: bold; color: #0f172a;">@string.Format("{0:N0}", cat.Value) đ</td>
+            </tr>
+                }
+            }
+            else
+            {
+            <tr><td colspan="2" style="text-align: center; color: #94a3b8;">No revenue data for this timeframe.</td></tr>
+            }
+        </tbody>
+    </table>
+</div>
 
-<!-- Tú's Station Inventory Report -->
-<h4 style="margin-top: 40px;">Station Inventory Utilization</h4>
-<div class="row">
-    @foreach (var station in ViewBag.StationData)
-    {
-        double utilPercentage = station.MaxCapacity > 0 ? ((double)station.CurrentInventory / station.MaxCapacity) * 100 : 0;
-        string barColor = utilPercentage < 20 ? "progress-bar-danger" : "progress-bar-success";
+<div class="glow-content" style="padding: 24px;">
+    <h3 style="margin-top: 0; color: #0f172a; font-weight: 700; margin-bottom: 5px;">Station Inventory Utilization</h3>
 
-    <div class="col-md-6">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <strong>@station.LocationName</strong>
-                <span class="pull-right text-muted">@station.CurrentInventory / @station.MaxCapacity Vehicles</span>
-                <div class="progress" style="margin-top: 10px; margin-bottom: 0;">
-                    <div class="progress-bar @barColor" role="progressbar" style="width: @utilPercentage%;">
-                        @Math.Round(utilPercentage)% Full
-                    </div>
-                </div>
+    <div style="display: flex; gap: 15px; font-size: 13px; font-weight: 600; color: #64748b; margin-bottom: 25px;">
+        <div><span style="display: inline-block; width: 12px; height: 12px; background-color: #009A5A; border-radius: 2px; margin-right: 5px;"></span>Available</div>
+        <div><span style="display: inline-block; width: 12px; height: 12px; background-color: #f59e0b; border-radius: 2px; margin-right: 5px;"></span>In-Transit</div>
+        <div><span style="display: inline-block; width: 12px; height: 12px; background-color: #ef4444; border-radius: 2px; margin-right: 5px;"></span>Maintenance (Mock)</div>
+    </div>
+
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            // mock vehicle math
+            // 1. get all actual vehicles registered to this station
+            var stationVehicles = allVehicles.Where(v => v.CurrentStationID == item.StationID).ToList();
+
+            // 2. count the real statuses
+            int realAvail = stationVehicles.Count(v => v.Status == "Available");
+            int realTransit = stationVehicles.Count(v => v.Status == "In-Transit");
+            int realMaint = stationVehicles.Count(v => v.Status == "Maintenance");
+            int totalReal = realAvail + realTransit + realMaint;
+
+            // 3. database schema fix: maxcapacity doesn't need ?? 0 because it's strictly required
+            int currentInv = item.CurrentInventory ?? 0;
+            int maxCap = item.MaxCapacity;
+
+            // 4. find the missing "ghost" vehicles inflating currentinventory
+            int mockCount = Math.Max(0, currentInv - totalReal);
+
+            // 5. dump ghosts into maintenance
+            int finalMaint = realMaint + mockCount;
+            int actualTotal = realAvail + realTransit + finalMaint;
+
+            // 6. calc percentages for the stacked bar
+            double pctAvail = maxCap > 0 ? ((double)realAvail / maxCap) * 100 : 0;
+            double pctTransit = maxCap > 0 ? ((double)realTransit / maxCap) * 100 : 0;
+            double pctMaint = maxCap > 0 ? ((double)finalMaint / maxCap) * 100 : 0;
+
+        <div class="col-md-6" style="margin-bottom: 30px;">
+            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 5px;">
+                <strong style="color: #0f172a; font-size: 16px;">@item.LocationName</strong>
+                <span style="color: #64748b; font-size: 13px;">@actualTotal / @maxCap Total</span>
+            </div>
+
+            <div style="background-color: #e2e8f0; border-radius: 6px; height: 12px; overflow: hidden; display: flex; width: 100%; margin-bottom: 8px;">
+                @if (pctAvail > 0) { <div style="background-color: #009A5A; width: @pctAvail.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture)%; height: 100%; transition: width 0.5s ease;"></div> }
+                @if (pctTransit > 0) { <div style="background-color: #f59e0b; width: @pctTransit.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture)%; height: 100%; transition: width 0.5s ease;"></div> }
+                @if (pctMaint > 0) { <div style="background-color: #ef4444; width: @pctMaint.ToString("0.##", System.Globalization.CultureInfo.InvariantCulture)%; height: 100%; transition: width 0.5s ease;"></div> }
+            </div>
+
+            <div style="display: flex; gap: 15px; font-size: 12px;">
+                <span style="color: #009A5A; font-weight: 700;">@realAvail available</span>
+                <span style="color: #f59e0b; font-weight: 700;">@realTransit in-transit</span>
+                <span style="color: #ef4444; font-weight: 700;">@finalMaint maintenance</span>
             </div>
         </div>
+        }
     </div>
-    }
 </div>
