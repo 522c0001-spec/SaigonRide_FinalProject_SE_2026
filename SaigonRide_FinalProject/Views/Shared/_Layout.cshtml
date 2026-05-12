@@ -12,15 +12,18 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
             color: #0f172a;
+            /* We remove the solid body color so the ambient animation shows through! */
+            background-color: transparent;
         }
 
-        /* Glassmorphism Navbar */
+        /* -----------------------------------------
+           2. GLASSMORPHISM NAVBAR
+           ----------------------------------------- */
         .navbar-inverse {
-            background-color: rgba(255, 255, 255, 0.85) !important;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            background-color: rgba(255, 255, 255, 0.75) !important;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border-bottom: 1px solid rgba(0, 154, 90, 0.1) !important;
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
         }
@@ -34,6 +37,9 @@
                 color: #009A5A !important;
             }
 
+        /* -----------------------------------------
+           3. FROSTED GLASS CARDS (Upgraded)
+           ----------------------------------------- */
         .glow-grid {
             display: flex;
             flex-wrap: wrap;
@@ -50,7 +56,7 @@
         }
 
             .glow-card:hover {
-                transform: translateY(-3px);
+                transform: translateY(-4px);
             }
 
             .glow-card::before {
@@ -73,14 +79,17 @@
 
         .glow-content {
             position: relative;
-            background: #ffffff;
+            /* FROSTED GLASS UPGRADE: Translucent background lets the mesh colors peek through */
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             height: 100%;
             border-radius: 15px;
             z-index: 2;
-            padding: 24px;
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
         }
 
+        /* Navbar Formatting Fixes */
         .navbar-collapse {
             display: block !important;
             height: auto !important;
@@ -113,6 +122,13 @@
     </style>
 </head>
 <body>
+
+    <div class="ambient-bg">
+        <div class="ambient-orb orb-1"></div>
+        <div class="ambient-orb orb-2"></div>
+        <div class="ambient-orb orb-3"></div>
+    </div>
+
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
@@ -150,8 +166,8 @@
 
     <div class="container body-content" style="margin-top: 80px;">
         @RenderBody()
-        <hr style="border-top: 1px solid #e2e8f0; margin-top: 50px;" />
-        <footer style="color: #64748b; font-size: 14px;">
+        <hr style="border-top: 1px solid rgba(0,0,0,0.1); margin-top: 50px;" />
+        <footer style="color: #64748b; font-size: 14px; text-align: center; margin-bottom: 20px;">
             <p>&copy; @DateTime.Now.Year - SaigonRide Application</p>
         </footer>
     </div>
@@ -161,10 +177,10 @@
 
     <script>
         document.body.onmousemove = e => {
-            for(const card of document.querySelectorAll('.glow-card')) {
+            for (const card of document.querySelectorAll('.glow-card')) {
                 const rect = card.getBoundingClientRect(),
-                      x = e.clientX - rect.left,
-                      y = e.clientY - rect.top;
+                    x = e.clientX - rect.left,
+                    y = e.clientY - rect.top;
                 card.style.setProperty("--mouse-x", `${x}px`);
                 card.style.setProperty("--mouse-y", `${y}px`);
             }

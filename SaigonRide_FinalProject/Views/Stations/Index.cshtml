@@ -37,21 +37,28 @@ else
 
     <div class="col-md-4 col-sm-6" style="margin-bottom: 30px;">
         <div class="glow-card">
-            <div class="glow-content">
-                <h3 style="margin-top: 0; font-weight: 700; color: #0f172a; font-size: 20px;">@item.LocationName</h3>
-                <p style="color: #94a3b8; font-size: 14px; margin-bottom: 20px;"><i class="glyphicon glyphicon-map-marker"></i> Tap to view vehicles</p>
+            <div class="glow-content" style="padding: 0; overflow: hidden;">
 
-                <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; margin-bottom: 8px;">
-                    <span style="color: #475569;">Availability</span>
-                    <span style="color: @barColor;">@item.CurrentInventory / @item.MaxCapacity</span>
-                </div>
-                <div style="background-color: #f1f5f9; border-radius: 10px; height: 8px; overflow: hidden; margin-bottom: 25px;">
-                    <div style="background-color: @barColor; width: @utilPct%; height: 100%; border-radius: 10px; transition: width 0.5s ease;"></div>
+                <div style="height: 160px; background: url('https://loremflickr.com/600/300/city,street?lock=@item.StationID') center/cover;">
+                    <div style="height: 100%; width: 100%; background: linear-gradient(to bottom, rgba(0,0,0,0) 60%, rgba(0,0,0,0.6));"></div>
                 </div>
 
-                <a href="/Vehicles/BrowseStation?stationId=@item.StationID" class="btn btn-block" style="background-color: #009A5A; color: white; font-weight: 700; border-radius: 8px; padding: 12px; transition: background 0.2s;">
-                    <i class="glyphicon glyphicon-send"></i> Rent Vehicle
-                </a>
+                <div style="padding: 24px;">
+                    <h3 style="margin-top: 0; font-weight: 800; color: #0f172a; font-size: 22px;">@item.LocationName</h3>
+                    <p style="color: #64748b; font-size: 14px; margin-bottom: 20px;"><i class="glyphicon glyphicon-map-marker"></i> Tap to view fleet</p>
+
+                    <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; margin-bottom: 8px;">
+                        <span style="color: #475569;">Availability</span>
+                        <span style="color: @barColor;">@item.CurrentInventory / @item.MaxCapacity</span>
+                    </div>
+                    <div style="background-color: #e2e8f0; border-radius: 10px; height: 8px; overflow: hidden; margin-bottom: 25px;">
+                        <div style="background-color: @barColor; width: @utilPct%; height: 100%; border-radius: 10px; transition: width 0.5s ease;"></div>
+                    </div>
+
+                    <a href="/Vehicles/BrowseStation?stationId=@item.StationID" class="btn btn-block" style="background-color: #009A5A; color: white; font-weight: 700; border-radius: 8px; padding: 14px; transition: background 0.2s; box-shadow: 0 4px 10px rgba(0,154,90,0.2);">
+                        <i class="glyphicon glyphicon-flash"></i> Rent Vehicle
+                    </a>
+                </div>
             </div>
         </div>
     </div>
