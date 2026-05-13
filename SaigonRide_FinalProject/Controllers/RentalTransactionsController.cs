@@ -168,7 +168,7 @@ namespace SaigonRide_FinalProject.Controllers
 
             // Determine the base rate per minute based on FR1
             ViewBag.RatePerMin = vehicle.Category == "Standard Bike" ? 500 :
-                                 vehicle.Category == "Electric Scooter" ? 1500 : 1000;
+                                 vehicle.Category.Contains("Scooter") ? 1500 : 1000;
 
             ViewBag.Stations = db.Stations.ToList();
             return View(vehicle);
@@ -250,7 +250,7 @@ namespace SaigonRide_FinalProject.Controllers
 
                 // 2. FR1: Calculate Base Fare based on Vehicle Category
                 decimal ratePerMinute = vehicle.Category == "Standard Bike" ? 500 :
-                                        vehicle.Category == "Electric Scooter" ? 1500 : 1000;
+                                        vehicle.Category.Contains("Scooter") ? 1500 : 1000;
 
                 ride.BaseFare = Math.Round(durationMinutes * ratePerMinute);
 

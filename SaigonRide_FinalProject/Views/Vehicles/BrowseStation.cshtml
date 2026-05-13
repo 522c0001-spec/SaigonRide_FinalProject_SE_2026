@@ -21,7 +21,7 @@
         {
             foreach (var item in Model)
             {
-                string price = item.Category == "Standard Bike" ? "500 đ/min" : item.Category == "Electric Scooter" ? "1.500 đ/min" : "1.000 đ/min";
+                string price = item.Category == "Standard Bike" ? "500 đ/min" : item.Category.Contains("Scooter") ? "1.500 đ/min" : "1.000 đ/min";
 
         <div class="col-md-6" style="margin-bottom: 20px;">
             <div class="glow-card">
