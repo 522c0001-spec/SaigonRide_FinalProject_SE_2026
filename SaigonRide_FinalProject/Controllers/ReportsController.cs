@@ -28,7 +28,7 @@ namespace SaigonRide_FinalProject.Controllers
             else if (filter == "Week") startDate = now.AddDays(-7);
             else if (filter == "Month") startDate = now.AddMonths(-1);
 
-            // 1. get the total numbers
+            // get the total numbers
             var transactions = db.RentalTransactions
                                  .Where(t => t.StartTime >= startDate)
                                  .ToList();
@@ -37,8 +37,7 @@ namespace SaigonRide_FinalProject.Controllers
             ViewBag.TotalRevenue = transactions.Sum(t => t.TotalPaid ?? 0);
             ViewBag.TotalRides = transactions.Count;
 
-            // 2. the mystery fix: group directly in the database!
-            // doing this without .ToList() forces sql server to do the join automatically
+            // group directly in the database
             var rawCategoryData = db.RentalTransactions
                 .Where(t => t.StartTime >= startDate)
                 .GroupBy(t => t.Vehicle.Category)
@@ -48,11 +47,11 @@ namespace SaigonRide_FinalProject.Controllers
                 })
                 .ToList();
 
-            // 3. safely map to dictionary and catch any missing categories
+            // safely map to dictionary and catch any missing categories
             var revByCategory = new Dictionary<string, double>();
             foreach (var item in rawCategoryData)
             {
-                // if a transaction has a deleted vehicle, group it safely instead of crashing
+                // if a transaction has a deleted vehicle, group it
                 string safeName = string.IsNullOrEmpty(item.CatName) ? "Unknown/Deleted" : item.CatName;
 
                 if (revByCategory.ContainsKey(safeName))
@@ -67,7 +66,7 @@ namespace SaigonRide_FinalProject.Controllers
 
             ViewBag.RevByCategory = revByCategory;
 
-            // 4. send all vehicles to view for the math stuff
+            // send all vehicles to view for the math stuff
             ViewBag.AllVehicles = db.Vehicles.ToList();
 
             var stations = db.Stations.ToList();

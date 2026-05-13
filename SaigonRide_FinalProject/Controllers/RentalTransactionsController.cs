@@ -244,7 +244,7 @@ namespace SaigonRide_FinalProject.Controllers
                 // 1. Stop the stopwatch
                 ride.EndTime = DateTime.Now;
 
-                // Calculate minutes (For testing purposes, if you end it instantly, we force 1 minute so the fare isn't 0)
+                // Calculate minutes (if you end it instantly, force 1 minute so the fare isn't 0)
                 var durationMinutes = (decimal)(ride.EndTime.Value - ride.StartTime).TotalMinutes;
                 if (durationMinutes < 1) durationMinutes = 1;
 
@@ -260,7 +260,7 @@ namespace SaigonRide_FinalProject.Controllers
 
                 if (utilPercentage < 20)
                 {
-                    // Station is almost empty, give 15% off
+                    // station is almost empty, give 15% off
                     ride.AppliedDiscount = Math.Round(ride.BaseFare.Value * 0.15m);
                 }
                 else
@@ -268,19 +268,16 @@ namespace SaigonRide_FinalProject.Controllers
                     ride.AppliedDiscount = 0;
                 }
 
-                // Finalize Transaction
                 ride.TotalPaid = ride.BaseFare - ride.AppliedDiscount;
                 ride.PaymentMethod = paymentMethod;
                 ride.EndStationID = endStationId;
 
-                // 4. Update the Fleet and Station Inventory
+                // update vehicle and station inventory
                 vehicle.Status = "Available";
                 vehicle.CurrentStationID = endStationId;
-                endStation.CurrentInventory += 1; // Add the bike to the new station
+                endStation.CurrentInventory += 1; // add the bike to the new station
 
                 db.SaveChanges();
-
-                // Send them back to their dashboard to see the final receipt
                 return RedirectToAction("MyRentals");
             }
 
