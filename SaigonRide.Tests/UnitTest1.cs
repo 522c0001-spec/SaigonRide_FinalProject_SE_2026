@@ -5,7 +5,6 @@ namespace SaigonRide.Tests
     [TestClass]
     public class PricingLogicTests
     {
-        // This helper isolates the math from your controller so it's easy to test!
         private double CalculateDiscount(int currentInventory, int maxCapacity)
         {
             double capacityPercent = ((double)currentInventory / maxCapacity) * 100;
